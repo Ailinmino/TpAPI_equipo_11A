@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Dominio;
+using Negocio;
 
 namespace Tp_API_equipo_11A.Controllers
 {
