@@ -1,0 +1,13 @@
+﻿body {
+    z-index: 1;
+}
+footer {
+    z-index : -1;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.InvalidLabel{
+    color:red;
+}
