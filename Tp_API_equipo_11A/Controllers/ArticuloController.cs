@@ -22,17 +22,24 @@ namespace Tp_API_equipo_11A.Controllers
         // GET api/values/5 BUSCAR
         public HttpResponseMessage Get(int id)
         {
-            ArticuloNegocio negocio = new ArticuloNegocio();
-            Articulo articulo = negocio.listar().Find(x => x.Id == id);
-            if(articulo == null)
+            try
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound, $"No se encontró el artículo con ID {id}.");
+                ArticuloNegocio negocio = new ArticuloNegocio();
+                Articulo articulo = negocio.listar().Find(x => x.Id == id);
+                if (articulo == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, $"No se encontró el artículo con ID {id}.");
+                }
+                return Request.CreateResponse(HttpStatusCode.OK, articulo);
             }
-            return Request.CreateResponse(HttpStatusCode.OK, articulo);
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Ocurrió un error inesperado.");
+            }
         }
 
         // POST: api/Articulo
-        public void Post([FromBody]ArticuloDto articulo)
+        public void Post([FromBody] ArticuloDto articulo)
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
             Articulo nuevo = new Articulo();
@@ -50,15 +57,27 @@ namespace Tp_API_equipo_11A.Controllers
         }
 
         // PUT: api/Articulo/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE: api/Articulo/5
-        public void Delete(int id)
+        public HttpResponseMessage Delete(int id)
         {
-            ArticuloNegocio negocio = new ArticuloNegocio();
-            negocio.eliminarFisico(id);
+            try
+            {
+                ArticuloNegocio negocio = new ArticuloNegocio();
+                if (negocio.listar().Find(x => x.Id == id) == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.NotFound, $"No se encontró el artículo con ID {id}.");
+                }
+                negocio.eliminarFisico(id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Artículo eliminado correctamente.");
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Ocurrió un error inesperado.");
+            }
         }
     }
 }
