@@ -20,11 +20,15 @@ namespace Tp_API_equipo_11A.Controllers
         }
 
         // GET api/values/5 BUSCAR
-        public Articulo Get(int id)
+        public HttpResponseMessage Get(int id)
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
             Articulo articulo = negocio.listar().Find(x => x.Id == id);
-            return articulo;
+            if(articulo == null)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound, $"No se encontró el artículo con ID {id}.");
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, articulo);
         }
 
         // POST: api/Articulo
@@ -33,7 +37,6 @@ namespace Tp_API_equipo_11A.Controllers
             ArticuloNegocio negocio = new ArticuloNegocio();
             Articulo nuevo = new Articulo();
             Imagen imagen;
-
             nuevo.Codigo = articulo.Codigo;
             nuevo.Nombre = articulo.Nombre;
             nuevo.Descripcion = articulo.Descripcion;
@@ -43,7 +46,6 @@ namespace Tp_API_equipo_11A.Controllers
             nuevo.Imagen = new List<Imagen>();
             imagen = new Imagen { Url = articulo.Imagen };
             nuevo.Imagen.Add(imagen);
-
             negocio.agregarArticulo(nuevo);
         }
 
