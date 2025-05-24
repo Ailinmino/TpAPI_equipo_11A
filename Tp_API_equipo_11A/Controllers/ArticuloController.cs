@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Tp_API_equipo_11A.Models;
 
 namespace Tp_API_equipo_11A.Controllers
 {
@@ -27,8 +28,23 @@ namespace Tp_API_equipo_11A.Controllers
         }
 
         // POST: api/Articulo
-        public void Post([FromBody]Articulo value)
+        public void Post([FromBody]ArticuloDto articulo)
         {
+            ArticuloNegocio negocio = new ArticuloNegocio();
+            Articulo nuevo = new Articulo();
+            Imagen imagen;
+
+            nuevo.Codigo = articulo.Codigo;
+            nuevo.Nombre = articulo.Nombre;
+            nuevo.Descripcion = articulo.Descripcion;
+            nuevo.Marca = new Marca { Id = articulo.IdMarca };
+            nuevo.Categoria = new Categoria { Id = articulo.IdCategoria };
+            nuevo.Precio = articulo.Precio;
+            nuevo.Imagen = new List<Imagen>();
+            imagen = new Imagen { Url = articulo.Imagen };
+            nuevo.Imagen.Add(imagen);
+
+            negocio.agregarArticulo(nuevo);
         }
 
         // PUT: api/Articulo/5

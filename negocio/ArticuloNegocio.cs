@@ -91,7 +91,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta("INSERT INTO ARTICULOS (Codigo, Nombre, Descripcion, Precio, IdMarca, IdCategoria) VALUES (@Codigo, @Nombre, @Descripcion, @Precio, @IDMarca, @IDCategoria)");
+                datos.setearConsulta("INSERT INTO ARTICULOS (Codigo, Nombre, Descripcion, Precio, IdMarca, IdCategoria) VALUES (@Codigo, @Nombre, @Descripcion, @Precio, @IDMarca, @IDCategoria); SELECT SCOPE_IDENTITY();");
                 datos.setearParametros("@Codigo", nuevo.Codigo);
                 datos.setearParametros("@Nombre", nuevo.Nombre);
                 datos.setearParametros("@Descripcion", nuevo.Descripcion);
