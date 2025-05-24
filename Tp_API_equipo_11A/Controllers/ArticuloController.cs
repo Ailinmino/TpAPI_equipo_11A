@@ -57,6 +57,8 @@ namespace Tp_API_equipo_11A.Controllers
         // DELETE: api/Articulo/5
         public void Delete(int id)
         {
+            ArticuloNegocio negocio = new ArticuloNegocio();
+            negocio.eliminarFisico(id);
         }
     }
 }
