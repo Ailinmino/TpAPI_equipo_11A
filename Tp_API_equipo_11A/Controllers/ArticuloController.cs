@@ -57,8 +57,24 @@ namespace Tp_API_equipo_11A.Controllers
         }
 
         // PUT: api/Articulo/5
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] ArticuloDto articulo)
         {
+            ArticuloNegocio negocio = new ArticuloNegocio();
+            Articulo editado = new Articulo();
+            Imagen imagen;
+
+            editado.Id = id;
+            editado.Codigo = articulo.Codigo;
+            editado.Nombre = articulo.Nombre;
+            editado.Descripcion = articulo.Descripcion;
+            editado.Marca = new Marca { Id = articulo.IdMarca };
+            editado.Categoria = new Categoria { Id = articulo.IdCategoria };
+            editado.Precio = articulo.Precio;
+            editado.Imagen = new List<Imagen>();
+            imagen = new Imagen { Url = articulo.Imagen };
+            editado.Imagen.Add(imagen);
+
+            negocio.modificar(editado);
         }
 
         // DELETE: api/Articulo/5
