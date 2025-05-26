@@ -121,6 +121,31 @@ namespace Negocio
             }
         }
 
+
+        public void agregarImagenes(int idArticulo, List<string> urls)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                foreach (var url in urls)
+                {
+                    datos.setearConsulta("INSERT INTO IMAGENES (IdArticulo, ImagenUrl) VALUES (@IdArticulo, @ImagenUrl)");
+                    datos.setearParametros("@IdArticulo", idArticulo);
+                    datos.setearParametros("@ImagenUrl", url);
+                    datos.ejecutarAccion();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public bool existeCodigo(string codigo)
         {
             AccesoDatos datos = new AccesoDatos();

@@ -51,7 +51,7 @@ namespace Tp_API_equipo_11A.Controllers
             nuevo.Categoria = new Categoria { Id = articulo.IdCategoria };
             nuevo.Precio = articulo.Precio;
             nuevo.Imagen = new List<Imagen>();
-            imagen = new Imagen { Url = articulo.Imagen };
+            imagen = new Imagen { Url = articulo.Imagen[0].Url };
             nuevo.Imagen.Add(imagen);
             negocio.agregarArticulo(nuevo);
         }
@@ -71,8 +71,8 @@ namespace Tp_API_equipo_11A.Controllers
             editado.Categoria = new Categoria { Id = articulo.IdCategoria };
             editado.Precio = articulo.Precio;
             editado.Imagen = new List<Imagen>();
-            imagen = new Imagen { Url = articulo.Imagen };
-            editado.Imagen.Add(imagen);
+            //imagen = new Imagen { Url = articulo.Imagen[] };
+            //editado.Imagen.Add(imagen);
 
             negocio.modificar(editado);
         }
@@ -93,6 +93,32 @@ namespace Tp_API_equipo_11A.Controllers
             catch
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, "Ocurrió un error inesperado.");
+            }
+        }
+
+        public HttpResponseMessage AgregarImagenes([FromBody] AgregarImagenesDto dto)
+        {
+            try
+            {
+                if (dto == null || dto.IdArticulo <= 0)
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Datos inválidos.");
+
+                if (dto.Imagenes == null || dto.Imagenes.Count == 0)
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Debe incluir al menos una imagen.");
+
+                ArticuloNegocio negocio = new ArticuloNegocio();
+
+                // Validar que el artículo exista
+                var articulo = negocio.listar().FirstOrDefault(x => x.Id == dto.IdArticulo);
+                if (articulo == null)
+                    return Request.CreateResponse(HttpStatusCode.NotFound, "No se encontró el artículo.");
+
+                negocio.agregarImagenes(dto.IdArticulo, dto.Imagenes);
+                return Request.CreateResponse(HttpStatusCode.OK, "Imágenes agregadas correctamente.");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error al agregar imágenes: {ex.Message}");
             }
         }
     }
