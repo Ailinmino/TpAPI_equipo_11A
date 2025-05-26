@@ -57,9 +57,9 @@ namespace Tp_API_equipo_11A.Controllers
         public void Post(int id, [FromBody] List<string> urls)
         {
             ImagenesNegocio negocio = new ImagenesNegocio();
-            Imagen nuevo = new Imagen();
+            //Imagen nuevo = new Imagen();
 
-            nuevo.Articulo.Id = id; 
+            //nuevo.Articulo.Id = id; 
 
             negocio.agregarImagenes(id, urls);
 

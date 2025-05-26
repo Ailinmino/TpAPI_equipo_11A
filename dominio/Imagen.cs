@@ -10,7 +10,6 @@ namespace Dominio
     {
         public int Id {  get; set; }
         public string Url { get; set; }
-        public Articulo Articulo { get; set; }
 
     }
 }

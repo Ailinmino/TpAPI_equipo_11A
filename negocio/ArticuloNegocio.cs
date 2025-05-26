@@ -39,15 +39,16 @@ namespace Negocio
                         aux.Categoria = new Categoria();
                         aux.Categoria.Id = (int)datos.Lector["IdCategoria"];
                         //aux.ID_Categoria = Convert.ToInt32(datos.Lector["IDCategoria"]);
-
                         aux.Categoria.Descripcion = (string)datos.Lector["Categoria"];
                         aux.Precio = datos.Lector["Precio"] != DBNull.Value ? Convert.ToSingle(datos.Lector["Precio"]) : 0;
-                        /*aux.Imagen = new Imagen();
-                        aux.Imagen.Url = datos.Lector["ImagenUrl"] != DBNull.Value ? datos.Lector["ImagenUrl"].ToString() : "";
-                        aux.Imagen = new List<Imagen>();
+                        aux.Imagenes = new List<Imagen>();
+
+                        //Imagen imagen = new Imagen();
+                        //aux.Imagenes.Url = datos.Lector["ImagenUrl"] != DBNull.Value ? datos.Lector["ImagenUrl"].ToString() : "";
+                        //aux.Imagenes = new List<Imagen>();
                         if (datos.Lector["IdImagen"] != DBNull.Value)
                         {
-                            aux.Imagen.Add(new Imagen
+                            aux.Imagenes.Add(new Imagen
                             {
                                 Id = (int)datos.Lector["IdImagen"],
                                 Url = (string)datos.Lector["ImagenUrl"]
@@ -59,12 +60,12 @@ namespace Negocio
                     {
                         if (datos.Lector["IdImagen"] != DBNull.Value)
                         {
-                            existente.Imagen.Add(new Imagen
+                            existente.Imagenes.Add(new Imagen
                             {
                                 Id = (int)datos.Lector["IdImagen"],
                                 Url = (string)datos.Lector["ImagenUrl"]
                             });
-                        }*/
+                        }
 
                     }
 
@@ -102,14 +103,14 @@ namespace Negocio
                 // Obtener el ID generado del artículo
                 nuevo.Id = datos.ejecutarScalar();
 
-               /* // Si hay imagen, insertarla con el ID del artículo
-                if (!string.IsNullOrEmpty(nuevo.Imagen[0].Url))
-                {
-                    datos.setearConsulta("INSERT INTO IMAGENES (IdArticulo, ImagenUrl) VALUES (@IdArticulo, @ImagenUrl)");
-                    datos.setearParametros("@IdArticulo", nuevo.Id);
-                    datos.setearParametros("@ImagenUrl", nuevo.Imagen[0].Url);
-                    datos.ejecutarAccion();
-                }*/
+                /* // Si hay imagen, insertarla con el ID del artículo
+                 if (!string.IsNullOrEmpty(nuevo.Imagen[0].Url))
+                 {
+                     datos.setearConsulta("INSERT INTO IMAGENES (IdArticulo, ImagenUrl) VALUES (@IdArticulo, @ImagenUrl)");
+                     datos.setearParametros("@IdArticulo", nuevo.Id);
+                     datos.setearParametros("@ImagenUrl", nuevo.Imagen[0].Url);
+                     datos.ejecutarAccion();
+                 }*/
             }
             catch (Exception ex)
             {
@@ -245,11 +246,11 @@ namespace Negocio
                         articulo.Id = id;
                         articulo.Nombre = (string)datos.Lector["Nombre"];
                         articulo.Descripcion = (string)datos.Lector["Descripcion"];
-                        
+
                     }
 
                     //Se recorren las imágenes del artículo evitando que se repitan los txt
-                    
+
                 }
 
                 return articulo;
