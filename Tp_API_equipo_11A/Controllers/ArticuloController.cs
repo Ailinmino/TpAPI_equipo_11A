@@ -39,28 +39,71 @@ namespace Tp_API_equipo_11A.Controllers
         }
 
         // POST: api/Articulo
-        public void Post([FromBody] ArticuloDto articulo)
+        public HttpResponseMessage Post([FromBody] ArticuloDto articulo)
         {
-            ArticuloNegocio negocio = new ArticuloNegocio();
-            Articulo nuevo = new Articulo();
-            
-            nuevo.Codigo = articulo.Codigo;
-            nuevo.Nombre = articulo.Nombre;
-            nuevo.Descripcion = articulo.Descripcion;
-            nuevo.Marca = new Marca { Id = articulo.IdMarca };
-            nuevo.Categoria = new Categoria { Id = articulo.IdCategoria };
-            nuevo.Precio = articulo.Precio;
-            
-            negocio.agregarArticulo(nuevo);
+            try
+            {
+                ArticuloNegocio negocio = new ArticuloNegocio();
+
+                //CODIGO
+                if (string.IsNullOrWhiteSpace(articulo.Codigo) || articulo.Codigo.Length > 50)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'Codigo' está vacìo o es demasiado extenso.");
+                }
+
+                //NOMBRE
+                if (string.IsNullOrWhiteSpace(articulo.Nombre) || articulo.Nombre.Length > 50)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'Nombre' está vacìo o es demasiado extenso");
+                }
+
+                //DESCRIPCION
+                if (string.IsNullOrWhiteSpace(articulo.Descripcion) || articulo.Descripcion.Length > 50)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'Descripcion' está vacìo o es demasiado extenso");
+                }
+
+                //MARCA
+                if (articulo.IdMarca <= 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'IdMarca' debe ser mayor a cero.");
+                }
+
+                //CATEGORIA
+                if (articulo.IdCategoria <= 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'IdCategoria' debe ser mayor a cero.");
+                }
+
+                //PRECIO
+                if (articulo.Precio <= 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'Precio' debe ser mayor a cero.");
+                }
+
+                Articulo nuevo = new Articulo();
+
+                nuevo.Codigo = articulo.Codigo;
+                nuevo.Nombre = articulo.Nombre;
+                nuevo.Descripcion = articulo.Descripcion;
+                nuevo.Marca = new Marca { Id = articulo.IdMarca };
+                nuevo.Categoria = new Categoria { Id = articulo.IdCategoria };
+                nuevo.Precio = articulo.Precio;
+
+                negocio.agregarArticulo(nuevo);
+                return Request.CreateResponse(HttpStatusCode.Created, "Artículo creado correctamente.");
+            }
+            catch (Exception ex)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error interno: {ex.Message}");
+            }
         }
 
         public void Post(int id, [FromBody] List<string> urls)
         {
             ImagenesNegocio negocio = new ImagenesNegocio();
-            //Imagen nuevo = new Imagen();
-
-            //nuevo.Articulo.Id = id; 
-
+           
             negocio.agregarImagenes(id, urls);
 
         }
@@ -68,21 +111,66 @@ namespace Tp_API_equipo_11A.Controllers
 
 
         // PUT: api/Articulo/5
-        public void Put(int id, [FromBody] ArticuloDto articulo)
+        public HttpResponseMessage Put(int id, [FromBody] ArticuloDto articulo)
         {
-            ArticuloNegocio negocio = new ArticuloNegocio();
-            Articulo editado = new Articulo();
-            
+            try
+            {
+                ArticuloNegocio negocio = new ArticuloNegocio();
 
-            editado.Id = id;
-            editado.Codigo = articulo.Codigo;
-            editado.Nombre = articulo.Nombre;
-            editado.Descripcion = articulo.Descripcion;
-            editado.Marca = new Marca { Id = articulo.IdMarca };
-            editado.Categoria = new Categoria { Id = articulo.IdCategoria };
-            editado.Precio = articulo.Precio;
 
-            negocio.modificar(editado);
+                //CODIGO
+                if (string.IsNullOrWhiteSpace(articulo.Codigo) || articulo.Codigo.Length > 50)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'Codigo' está vacìo o es demasiado extenso.");
+                }
+
+                //NOMBRE
+                if (string.IsNullOrWhiteSpace(articulo.Nombre) || articulo.Nombre.Length > 50)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'Nombre' está vacìo o es demasiado extenso");
+                }
+
+                //DESCRIPCION
+                if (string.IsNullOrWhiteSpace(articulo.Descripcion) || articulo.Descripcion.Length > 50)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'Descripcion' está vacìo o es demasiado extenso");
+                }
+
+                //MARCA
+                if (articulo.IdMarca <= 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'IdMarca' debe ser mayor a cero.");
+                }
+
+                //CATEGORIA
+                if (articulo.IdCategoria <= 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'IdCategoria' debe ser mayor a cero.");
+                }
+
+                //PRECIO
+                if (articulo.Precio <= 0)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'Precio' debe ser mayor a cero.");
+                }
+
+                Articulo editado = new Articulo();
+
+                editado.Id = id;
+                editado.Codigo = articulo.Codigo;
+                editado.Nombre = articulo.Nombre;
+                editado.Descripcion = articulo.Descripcion;
+                editado.Marca = new Marca { Id = articulo.IdMarca };
+                editado.Categoria = new Categoria { Id = articulo.IdCategoria };
+                editado.Precio = articulo.Precio;
+
+                negocio.modificar(editado);
+                return Request.CreateResponse(HttpStatusCode.Created, "Artículo modificado correctamente.");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error interno: {ex.Message}");
+            }
         }
 
         // DELETE: api/Articulo/5
