@@ -100,11 +100,18 @@ namespace Tp_API_equipo_11A.Controllers
             }
         }
 
-        public void Post(int id, [FromBody] List<string> urls)
+        public HttpResponseMessage Post(int id, [FromBody] List<string> urls)
         {
-            ImagenesNegocio negocio = new ImagenesNegocio();
-           
-            negocio.agregarImagenes(id, urls);
+            try
+            {
+                ImagenesNegocio negocio = new ImagenesNegocio();
+                negocio.agregarImagenes(id, urls);
+                return Request.CreateResponse(HttpStatusCode.Created, "Imágenes agregadas correctamente.");
+            }
+            catch (Exception ex)
+            {
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error interno: {ex.Message}");
+            }
 
         }
 
