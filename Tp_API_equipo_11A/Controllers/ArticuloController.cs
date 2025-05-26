@@ -117,6 +117,11 @@ namespace Tp_API_equipo_11A.Controllers
             {
                 ArticuloNegocio negocio = new ArticuloNegocio();
 
+                if (negocio.obtenerPorId(id) == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, $"No se encontró el artículo con ID {id}.");
+                }
+
 
                 //CODIGO
                 if (string.IsNullOrWhiteSpace(articulo.Codigo) || articulo.Codigo.Length > 50)
@@ -155,6 +160,7 @@ namespace Tp_API_equipo_11A.Controllers
                 }
 
                 Articulo editado = new Articulo();
+                
 
                 editado.Id = id;
                 editado.Codigo = articulo.Codigo;
