@@ -43,25 +43,36 @@ namespace Tp_API_equipo_11A.Controllers
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
             Articulo nuevo = new Articulo();
-            Imagen imagen;
+            
             nuevo.Codigo = articulo.Codigo;
             nuevo.Nombre = articulo.Nombre;
             nuevo.Descripcion = articulo.Descripcion;
             nuevo.Marca = new Marca { Id = articulo.IdMarca };
             nuevo.Categoria = new Categoria { Id = articulo.IdCategoria };
             nuevo.Precio = articulo.Precio;
-            nuevo.Imagen = new List<Imagen>();
-            imagen = new Imagen { Url = articulo.Imagen[0].Url };
-            nuevo.Imagen.Add(imagen);
+            
             negocio.agregarArticulo(nuevo);
         }
+
+        public void Post(int id, [FromBody] List<string> urls)
+        {
+            ImagenesNegocio negocio = new ImagenesNegocio();
+            Imagen nuevo = new Imagen();
+
+            nuevo.Articulo.Id = id; 
+
+            negocio.agregarImagenes(id, urls);
+
+        }
+
+
 
         // PUT: api/Articulo/5
         public void Put(int id, [FromBody] ArticuloDto articulo)
         {
             ArticuloNegocio negocio = new ArticuloNegocio();
             Articulo editado = new Articulo();
-            Imagen imagen;
+            
 
             editado.Id = id;
             editado.Codigo = articulo.Codigo;
@@ -70,9 +81,6 @@ namespace Tp_API_equipo_11A.Controllers
             editado.Marca = new Marca { Id = articulo.IdMarca };
             editado.Categoria = new Categoria { Id = articulo.IdCategoria };
             editado.Precio = articulo.Precio;
-            editado.Imagen = new List<Imagen>();
-            //imagen = new Imagen { Url = articulo.Imagen[] };
-            //editado.Imagen.Add(imagen);
 
             negocio.modificar(editado);
         }
@@ -96,30 +104,5 @@ namespace Tp_API_equipo_11A.Controllers
             }
         }
 
-        public HttpResponseMessage AgregarImagenes([FromBody] AgregarImagenesDto dto)
-        {
-            try
-            {
-                if (dto == null || dto.IdArticulo <= 0)
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Datos inválidos.");
-
-                if (dto.Imagenes == null || dto.Imagenes.Count == 0)
-                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Debe incluir al menos una imagen.");
-
-                ArticuloNegocio negocio = new ArticuloNegocio();
-
-                // Validar que el artículo exista
-                var articulo = negocio.listar().FirstOrDefault(x => x.Id == dto.IdArticulo);
-                if (articulo == null)
-                    return Request.CreateResponse(HttpStatusCode.NotFound, "No se encontró el artículo.");
-
-                negocio.agregarImagenes(dto.IdArticulo, dto.Imagenes);
-                return Request.CreateResponse(HttpStatusCode.OK, "Imágenes agregadas correctamente.");
-            }
-            catch (Exception ex)
-            {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error al agregar imágenes: {ex.Message}");
-            }
-        }
     }
 }

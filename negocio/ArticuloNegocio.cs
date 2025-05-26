@@ -42,8 +42,8 @@ namespace Negocio
 
                         aux.Categoria.Descripcion = (string)datos.Lector["Categoria"];
                         aux.Precio = datos.Lector["Precio"] != DBNull.Value ? Convert.ToSingle(datos.Lector["Precio"]) : 0;
-                        //aux.Imagen = new Imagen();
-                        //aux.Imagen.Url = datos.Lector["ImagenUrl"] != DBNull.Value ? datos.Lector["ImagenUrl"].ToString() : "";
+                        /*aux.Imagen = new Imagen();
+                        aux.Imagen.Url = datos.Lector["ImagenUrl"] != DBNull.Value ? datos.Lector["ImagenUrl"].ToString() : "";
                         aux.Imagen = new List<Imagen>();
                         if (datos.Lector["IdImagen"] != DBNull.Value)
                         {
@@ -64,7 +64,7 @@ namespace Negocio
                                 Id = (int)datos.Lector["IdImagen"],
                                 Url = (string)datos.Lector["ImagenUrl"]
                             });
-                        }
+                        }*/
 
                     }
 
@@ -102,14 +102,14 @@ namespace Negocio
                 // Obtener el ID generado del artículo
                 nuevo.Id = datos.ejecutarScalar();
 
-                // Si hay imagen, insertarla con el ID del artículo
+               /* // Si hay imagen, insertarla con el ID del artículo
                 if (!string.IsNullOrEmpty(nuevo.Imagen[0].Url))
                 {
                     datos.setearConsulta("INSERT INTO IMAGENES (IdArticulo, ImagenUrl) VALUES (@IdArticulo, @ImagenUrl)");
                     datos.setearParametros("@IdArticulo", nuevo.Id);
                     datos.setearParametros("@ImagenUrl", nuevo.Imagen[0].Url);
                     datos.ejecutarAccion();
-                }
+                }*/
             }
             catch (Exception ex)
             {
@@ -245,18 +245,11 @@ namespace Negocio
                         articulo.Id = id;
                         articulo.Nombre = (string)datos.Lector["Nombre"];
                         articulo.Descripcion = (string)datos.Lector["Descripcion"];
-                        articulo.Imagen = new List<Imagen>();
+                        
                     }
 
                     //Se recorren las imágenes del artículo evitando que se repitan los txt
-                    if (datos.Lector["IdImagen"] != DBNull.Value)
-                    {
-                        articulo.Imagen.Add(new Imagen
-                        {
-                            Id = (int)datos.Lector["IdImagen"],
-                            Url = (string)datos.Lector["ImagenUrl"]
-                        });
-                    }
+                    
                 }
 
                 return articulo;
