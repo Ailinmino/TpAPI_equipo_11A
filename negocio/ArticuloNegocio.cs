@@ -18,7 +18,7 @@ namespace Negocio
             try
             {
 
-                datos.setearConsulta("select A.Id,A.nombre, A.codigo, A.descripcion, A.IdCategoria as IdCategoria, A.IdMarca as IdMarca, M.Descripcion as Marca, C.Descripcion as Categoria, A.Precio, I.ImagenUrl as ImagenUrl, I.Id as IdImagen\r\nFROM ARTICULOS A \r\nINNER JOIN MARCAS M ON A.IdMarca = M.Id \r\nINNER JOIN CATEGORIAS C ON A.IdCategoria = C.Id \r\nINNER JOIN IMAGENES I ON A.Id = I.IdArticulo");
+                datos.setearConsulta("select A.Id,A.nombre, A.codigo, A.descripcion, A.IdCategoria as IdCategoria, A.IdMarca as IdMarca, M.Descripcion as Marca, C.Descripcion as Categoria, A.Precio, I.ImagenUrl as ImagenUrl, I.Id as IdImagen FROM ARTICULOS A INNER JOIN MARCAS M ON A.IdMarca = M.Id INNER JOIN CATEGORIAS C ON A.IdCategoria = C.Id LEFT JOIN IMAGENES I ON A.Id = I.IdArticulo");
                 datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
@@ -233,7 +233,7 @@ namespace Negocio
 
             try
             {
-                datos.setearConsulta(@"SELECT A.Id, A.Nombre, A.Descripcion, I.Id AS IdImagen, I.ImagenUrl FROM ARTICULOS A INNER JOIN IMAGENES I ON A.Id = I.IdArticulo WHERE A.Id = @id");
+                datos.setearConsulta("SELECT A.Id, A.Nombre, A.Descripcion, I.Id AS IdImagen, I.ImagenUrl FROM ARTICULOS A LEFT JOIN IMAGENES I ON A.Id = I.IdArticulo WHERE A.Id = @id");
                 datos.setearParametros("@id", id);
                 datos.ejecutarLectura();
 
