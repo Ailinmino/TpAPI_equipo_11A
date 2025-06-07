@@ -25,7 +25,7 @@ namespace Tp_API_equipo_11A.Controllers
             try
             {
                 ArticuloNegocio negocio = new ArticuloNegocio();
-                Articulo articulo = negocio.listar().Find(x => x.Id == id);
+                Articulo articulo = negocio.obtenerPorId(id);
                 if (articulo == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound, $"No se encontró el artículo con ID {id}.");
@@ -192,10 +192,11 @@ namespace Tp_API_equipo_11A.Controllers
             try
             {
                 ArticuloNegocio negocio = new ArticuloNegocio();
-                if (negocio.listar().Find(x => x.Id == id) == null)
+                if(negocio.obtenerPorId(id) == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound, $"No se encontró el artículo con ID {id}.");
                 }
+
                 negocio.eliminarFisico(id);
                 return Request.CreateResponse(HttpStatusCode.OK, "Artículo eliminado correctamente.");
             }

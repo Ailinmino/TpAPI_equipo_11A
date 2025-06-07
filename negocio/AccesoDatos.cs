@@ -21,10 +21,10 @@ namespace Negocio
         {
             conexion = new SqlConnection(
                 //CONEXIÓN MERI
-                "server=.\\SQLEXPRESS01; database=PROMOS_DB; integrated security=true"
+                //"server=.\\SQLEXPRESS01; database=PROMOS_DB; integrated security=true"
                 
                 //CONEXION NORMAL
-                //"server=.\\SQLEXPRESS; database=PROMOS_DB; integrated security=true"
+                "server=.\\SQLEXPRESS; database=PROMOS_DB; integrated security=true"
                 );
             comando = new SqlCommand();
         }

@@ -239,20 +239,11 @@ namespace Negocio
 
                 while (datos.Lector.Read())
                 {
-                    //Se inicializa una sola vez el artículo y se carga el nombre y la descripción
-                    if (articulo == null)
-                    {
                         articulo = new Articulo();
                         articulo.Id = id;
                         articulo.Nombre = (string)datos.Lector["Nombre"];
                         articulo.Descripcion = (string)datos.Lector["Descripcion"];
-
-                    }
-
-                    //Se recorren las imágenes del artículo evitando que se repitan los txt
-
                 }
-
                 return articulo;
             }
             catch (Exception ex)
