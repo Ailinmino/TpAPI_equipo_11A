@@ -64,15 +64,25 @@ namespace Tp_API_equipo_11A.Controllers
                 }
 
                 //MARCA
+                MarcaNegocio marcanegocio = new MarcaNegocio();
                 if (articulo.IdMarca <= 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'IdMarca' debe ser mayor a cero.");
                 }
+                if (marcanegocio.obtenerPorId(articulo.IdMarca) == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Marca no existe");
+                }
 
                 //CATEGORIA
+                CategoriaNegocio categoriaNegocio = new CategoriaNegocio();
                 if (articulo.IdCategoria <= 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'IdCategoria' debe ser mayor a cero.");
+                }
+                if (categoriaNegocio.obtenerPorId(articulo.IdCategoria) == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Categoria no existe.");
                 }
 
                 //PRECIO
@@ -100,6 +110,7 @@ namespace Tp_API_equipo_11A.Controllers
             }
         }
 
+
         public HttpResponseMessage Post(int id, [FromBody] List<string> urls)
         {
             try
@@ -122,9 +133,9 @@ namespace Tp_API_equipo_11A.Controllers
         {
             try
             {
-                ArticuloNegocio negocio = new ArticuloNegocio();
+                ArticuloNegocio articulonegocio = new ArticuloNegocio();
 
-                if (negocio.obtenerPorId(id) == null)
+                if (articulonegocio.obtenerPorId(id) == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, $"No se encontró el artículo con ID {id}.");
                 }
@@ -149,15 +160,25 @@ namespace Tp_API_equipo_11A.Controllers
                 }
 
                 //MARCA
+                MarcaNegocio marcanegocio = new MarcaNegocio();
                 if (articulo.IdMarca <= 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'IdMarca' debe ser mayor a cero.");
                 }
+                if (marcanegocio.obtenerPorId(articulo.IdMarca) == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Marca no existe");
+                }
 
                 //CATEGORIA
+                CategoriaNegocio categoriaNegocio = new CategoriaNegocio();
                 if (articulo.IdCategoria <= 0)
                 {
                     return Request.CreateResponse(HttpStatusCode.BadRequest, "El campo 'IdCategoria' debe ser mayor a cero.");
+                }
+                if (categoriaNegocio.obtenerPorId(articulo.IdCategoria) == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, "Categoria no existe.");
                 }
 
                 //PRECIO
@@ -167,7 +188,7 @@ namespace Tp_API_equipo_11A.Controllers
                 }
 
                 Articulo editado = new Articulo();
-                
+
 
                 editado.Id = id;
                 editado.Codigo = articulo.Codigo;
@@ -177,7 +198,7 @@ namespace Tp_API_equipo_11A.Controllers
                 editado.Categoria = new Categoria { Id = articulo.IdCategoria };
                 editado.Precio = articulo.Precio;
 
-                negocio.modificar(editado);
+                articulonegocio.modificar(editado);
                 return Request.CreateResponse(HttpStatusCode.Created, "Artículo modificado correctamente.");
             }
             catch (Exception ex)
@@ -185,6 +206,7 @@ namespace Tp_API_equipo_11A.Controllers
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Error interno: {ex.Message}");
             }
         }
+
 
         // DELETE: api/Articulo/5
         public HttpResponseMessage Delete(int id)
