@@ -233,17 +233,54 @@ namespace Negocio
 
             try
             {
-                datos.setearConsulta("SELECT A.Id, A.Nombre, A.Descripcion, I.Id AS IdImagen, I.ImagenUrl FROM ARTICULOS A LEFT JOIN IMAGENES I ON A.Id = I.IdArticulo WHERE A.Id = @id");
+                datos.setearConsulta(@"SELECT A.Id, A.Nombre, A.Descripcion, A.Codigo, A.Precio,
+                               I.Id AS IdImagen, I.ImagenUrl,
+                               M.Id AS IdMarca, M.Descripcion AS NombreMarca,
+                               C.Id AS IdCategoria, C.Descripcion AS NombreCategoria
+                               FROM ARTICULOS A
+                               LEFT JOIN IMAGENES I ON A.Id = I.IdArticulo
+                               LEFT JOIN MARCAS M ON A.IdMarca = M.Id
+                               LEFT JOIN CATEGORIAS C ON A.IdCategoria = C.Id                               
+                               WHERE A.Id = @id");
                 datos.setearParametros("@id", id);
                 datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
                 {
+                    if (articulo == null)
+                    {
                         articulo = new Articulo();
-                        articulo.Id = id;
-                        articulo.Nombre = (string)datos.Lector["Nombre"];
-                        articulo.Descripcion = (string)datos.Lector["Descripcion"];
+                        articulo.Id = (int)datos.Lector["Id"];
+                        articulo.Nombre = datos.Lector["Nombre"].ToString();
+                        articulo.Descripcion = datos.Lector["Descripcion"].ToString();
+                        articulo.Codigo = datos.Lector["Codigo"]?.ToString();
+                        articulo.Precio = (float)(datos.Lector["Precio"] != DBNull.Value ? Convert.ToDecimal(datos.Lector["Precio"]) : 0);
+                        articulo.Imagenes = new List<Imagen>();
+                    }
+
+                    articulo.Marca = new Marca
+                    {
+                        Id = datos.Lector["IdMarca"] != DBNull.Value ? (int)datos.Lector["IdMarca"] : 0,
+                        Descripcion = datos.Lector["NombreMarca"]?.ToString()
+                    };
+
+                    articulo.Categoria = new Categoria
+                    {
+                        Id = datos.Lector["IdCategoria"] != DBNull.Value ? (int)datos.Lector["IdCategoria"] : 0,
+                        Descripcion = datos.Lector["NombreCategoria"]?.ToString()
+                    };
+
+                    if (datos.Lector["IdImagen"] != DBNull.Value)
+                    {
+                        Imagen imagen = new Imagen
+                        {
+                            Id = (int)datos.Lector["IdImagen"],
+                            Url = datos.Lector["ImagenUrl"].ToString()
+                        };
+                        articulo.Imagenes.Add(imagen);
+                    }
                 }
+
                 return articulo;
             }
             catch (Exception ex)
