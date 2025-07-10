@@ -78,6 +78,19 @@ namespace Negocio
             }
         }
 
-
+        public void eliminarPorArticulo(int idArticulo)
+        {
+            try
+            {
+                AccesoDatos datos = new AccesoDatos();
+                datos.setearConsulta("DELETE FROM VOUCHERS WHERE IdArticulo = @idArticulo");
+                datos.setearParametros("idArticulo", idArticulo);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

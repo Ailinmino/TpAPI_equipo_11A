@@ -191,18 +191,29 @@ namespace Tp_API_equipo_11A.Controllers
         {
             try
             {
-                ArticuloNegocio negocio = new ArticuloNegocio();
-                if(negocio.obtenerPorId(id) == null)
+                ArticuloNegocio articuloNegocio = new ArticuloNegocio();
+                Articulo articulo = articuloNegocio.obtenerPorId(id);
+                if (articulo == null)
                 {
                     return Request.CreateResponse(HttpStatusCode.NotFound, $"No se encontró el artículo con ID {id}.");
                 }
 
-                negocio.eliminarFisico(id);
-                return Request.CreateResponse(HttpStatusCode.OK, "Artículo eliminado correctamente.");
+                //Eliminar vouchers
+                VoucherNegocio voucherNegocio = new VoucherNegocio();
+                voucherNegocio.eliminarPorArticulo(id);
+
+                //Eliminar imágenes
+                ImagenesNegocio imagenNegocio = new ImagenesNegocio();
+                imagenNegocio.eliminarPorArticulo(id);
+
+                //Eliminar artículo
+                articuloNegocio.eliminarFisico(id);
+
+                return Request.CreateResponse(HttpStatusCode.OK, "Artículo y datos relacionados eliminados correctamente.");
             }
-            catch
+            catch (Exception ex)
             {
-                return Request.CreateResponse(HttpStatusCode.InternalServerError, "Ocurrió un error inesperado.");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, $"Ocurrió un error inesperado: {ex.Message}");
             }
         }
 
