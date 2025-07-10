@@ -17,8 +17,18 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
+                datos.setearConsulta(@"
+            SELECT A.Id, A.Nombre, A.Codigo, A.Descripcion, 
+                   A.IdCategoria, A.IdMarca, 
+                   M.Descripcion AS Marca, 
+                   C.Descripcion AS Categoria, 
+                   A.Precio, 
+                   I.ImagenUrl AS ImagenUrl, I.Id AS IdImagen
+            FROM ARTICULOS A
+            LEFT JOIN MARCAS M ON A.IdMarca = M.Id
+            LEFT JOIN CATEGORIAS C ON A.IdCategoria = C.Id
+            LEFT JOIN IMAGENES I ON A.Id = I.IdArticulo");
 
-                datos.setearConsulta("select A.Id,A.nombre, A.codigo, A.descripcion, A.IdCategoria as IdCategoria, A.IdMarca as IdMarca, M.Descripcion as Marca, C.Descripcion as Categoria, A.Precio, I.ImagenUrl as ImagenUrl, I.Id as IdImagen FROM ARTICULOS A INNER JOIN MARCAS M ON A.IdMarca = M.Id INNER JOIN CATEGORIAS C ON A.IdCategoria = C.Id LEFT JOIN IMAGENES I ON A.Id = I.IdArticulo");
                 datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
@@ -29,31 +39,34 @@ namespace Negocio
                     {
                         Articulo aux = new Articulo();
                         aux.Id = id;
-                        aux.Codigo = (string)datos.Lector["Codigo"];
-                        aux.Nombre = (string)datos.Lector["Nombre"];
-                        aux.Descripcion = (string)datos.Lector["Descripcion"];
+                        aux.Codigo = datos.Lector["Codigo"]?.ToString();
+                        aux.Nombre = datos.Lector["Nombre"]?.ToString();
+                        aux.Descripcion = datos.Lector["Descripcion"]?.ToString();
 
-                        aux.Marca = new Marca();
-                        aux.Marca.Id = (int)datos.Lector["IdMarca"];
-                        aux.Marca.Descripcion = (string)datos.Lector["Marca"];
-                        aux.Categoria = new Categoria();
-                        aux.Categoria.Id = (int)datos.Lector["IdCategoria"];
-                        //aux.ID_Categoria = Convert.ToInt32(datos.Lector["IDCategoria"]);
-                        aux.Categoria.Descripcion = (string)datos.Lector["Categoria"];
+                        aux.Marca = new Marca
+                        {
+                            Id = datos.Lector["IdMarca"] != DBNull.Value ? (int)datos.Lector["IdMarca"] : 0,
+                            Descripcion = datos.Lector["Marca"]?.ToString()
+                        };
+
+                        aux.Categoria = new Categoria
+                        {
+                            Id = datos.Lector["IdCategoria"] != DBNull.Value ? (int)datos.Lector["IdCategoria"] : 0,
+                            Descripcion = datos.Lector["Categoria"]?.ToString()
+                        };
+
                         aux.Precio = datos.Lector["Precio"] != DBNull.Value ? Convert.ToSingle(datos.Lector["Precio"]) : 0;
                         aux.Imagenes = new List<Imagen>();
 
-                        //Imagen imagen = new Imagen();
-                        //aux.Imagenes.Url = datos.Lector["ImagenUrl"] != DBNull.Value ? datos.Lector["ImagenUrl"].ToString() : "";
-                        //aux.Imagenes = new List<Imagen>();
                         if (datos.Lector["IdImagen"] != DBNull.Value)
                         {
                             aux.Imagenes.Add(new Imagen
                             {
                                 Id = (int)datos.Lector["IdImagen"],
-                                Url = (string)datos.Lector["ImagenUrl"]
+                                Url = datos.Lector["ImagenUrl"]?.ToString()
                             });
                         }
+
                         lista.Add(aux);
                     }
                     else
@@ -63,23 +76,18 @@ namespace Negocio
                             existente.Imagenes.Add(new Imagen
                             {
                                 Id = (int)datos.Lector["IdImagen"],
-                                Url = (string)datos.Lector["ImagenUrl"]
+                                Url = datos.Lector["ImagenUrl"]?.ToString()
                             });
                         }
-
                     }
-
                 }
 
                 return lista;
-
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
-
             finally
             {
                 datos.cerrarConexion();
