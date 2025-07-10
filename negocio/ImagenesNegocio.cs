@@ -11,8 +11,11 @@ namespace Negocio
 
         public void agregarImagenes(int idArticulo, List<string> urls)
         {
+            if (urls == null || urls.Count == 0)
+                return;
 
             AccesoDatos datos = new AccesoDatos();
+
             try
             {
                 foreach (var url in urls)
@@ -33,6 +36,7 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
 
         public void eliminarPorArticulo(int idArticulo)
         {

@@ -110,13 +110,20 @@ namespace Tp_API_equipo_11A.Controllers
             }
         }
 
-
+        //POST IMÁGENES
         public HttpResponseMessage Post(int id, [FromBody] List<string> urls)
         {
             try
             {
-                ImagenesNegocio negocio = new ImagenesNegocio();
-                negocio.agregarImagenes(id, urls);
+                ArticuloNegocio articulonegocio = new ArticuloNegocio();
+
+                if (articulonegocio.obtenerPorId(id) == null)
+                {
+                    return Request.CreateResponse(HttpStatusCode.BadRequest, $"No se encontró el artículo con ID {id}.");
+                }
+
+                ImagenesNegocio imagenesnegocio = new ImagenesNegocio();
+                imagenesnegocio.agregarImagenes(id, urls);
                 return Request.CreateResponse(HttpStatusCode.Created, "Imágenes agregadas correctamente.");
             }
             catch (Exception ex)
@@ -125,6 +132,7 @@ namespace Tp_API_equipo_11A.Controllers
             }
 
         }
+
 
 
 
